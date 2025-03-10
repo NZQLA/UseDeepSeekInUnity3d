@@ -28,7 +28,8 @@ public class DeepSeekDialogueManager : MonoBehaviour
     ///// </summary>
     //public event Action<DeepSeekRspStreamData> OnReceiveStreamDataHandler;
 
-
+    [SerializeField, Header("DeepSeek的一些数据")]
+    protected DeepSeekInfo deepSeekInfo = new DeepSeekInfo();
 
     [SerializeField, Header("聊天面板")]
     protected DeepSeekChatPanelTemp panelChat;
@@ -164,8 +165,24 @@ public class DeepSeekDialogueManager : MonoBehaviour
         //Log.LogAtUnityEditor($"Receive stream data: \n{rspRawContent}");
         // 只要第一行  
         var indexStart = rspRawContent.IndexOf(":") + 1;
+        // 如果没有找到冒号，说明这不是一个有效的数据
+        if (indexStart < 0)
+        {
+            return;
+        }
+
+        // this msg is tell you the stream is done
+        if (rspRawContent.StartsWith(deepSeekInfo.rspDone))
+        {
+            return;
+        }
+
         var indexEnd = rspRawContent.IndexOf("\n");
         var length = indexEnd - indexStart;
+        if (length <= 0)
+        {
+            return;
+        }
         rspRawContent = rspRawContent.Substring(indexStart, length);
 
         //var dataStream = new DeepSeekRspStreamData();
@@ -176,9 +193,19 @@ public class DeepSeekDialogueManager : MonoBehaviour
         try
         {
             rspJsonObj = JsonMapper.ToObject(rspRawContent);
-            var dataFirst = rspJsonObj["choices"][0]["delta"];
-            var reasoning_content = dataFirst["reasoning_content"];
-            var content = dataFirst["content"];
+            var rspChoices0 = rspJsonObj[deepSeekInfo.rspChoices][0];
+            //  {"choices":[{"finish_reason":"stop","delta" ... } means the rsp will be over soon!
+            if (rspChoices0[deepSeekInfo.rspFinishFlag] != null &&
+                rspChoices0[deepSeekInfo.rspFinishFlag].ToString() == deepSeekInfo.rspFinishFlagValue)
+            {
+                //OnRspCompleted();
+                return;
+            }
+
+
+            var dataFirst = rspChoices0[deepSeekInfo.rspDelta];
+            var reasoning_content = dataFirst[deepSeekInfo.rspReasoning_content];
+            var content = dataFirst[deepSeekInfo.rspContent];
             //// 获取时间戳
             //dataStream.time = long.Parse(rspJsonObj["created"].ToString());
 
