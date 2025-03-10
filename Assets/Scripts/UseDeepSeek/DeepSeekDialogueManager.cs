@@ -51,6 +51,10 @@ public class DeepSeekDialogueManager : MonoBehaviour
     //private string apiKey = "在此处填入你申请的API密钥";  // DeepSeek API密钥
     private string apiKey = "sk-38bd3a635ad2459e85601376800f3a69";  // DeepSeek API密钥
 
+    [SerializeField, Header("环境变量路径：阿里云的 Deep Seek APIKey")]
+    private string apiKeyPathName = "DeepSeekALiYun";
+
+
     [SerializeField]
     private string modelName = "deepseek-chat";  // 使用的模型名称
 
@@ -112,8 +116,18 @@ public class DeepSeekDialogueManager : MonoBehaviour
     {
         panelChat.OnSendQuestionHandler += SendQuestion;
         panelChat.OnStopHandler += StopReceiveStreamData;
+        RefreshAPIKeyFromEnv();
     }
 
+
+    /// <summary>
+    /// Use the API key from environment variable to refresh the API key. 
+    /// </summary>
+    [ContextMenu("RefreshAPIKeyFromEnv")]
+    public void RefreshAPIKeyFromEnv()
+    {
+        apiKey = Environment.GetEnvironmentVariable(apiKeyPathName);
+    }
 
     /// <summary>
     /// 发送问题

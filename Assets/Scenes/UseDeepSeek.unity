@@ -294,6 +294,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deepSeekInfo:
     rspChoices: choices
+    rspReasoning_content: reasoning_content
+    rspContent: content
     rspFinishFlag: finish_reason
     rspFinishFlagValue: '[DONE]'
     rspDone: '[DONE]'
@@ -301,7 +303,8 @@ MonoBehaviour:
   useStream: 1
   clearRspOnSendQuestion: 1
   bufferSize: 20480
-  apiKey: sk-b2f215c94283487ebf9436884bc26266
+  apiKey: b2f215c94283487ebf9436884bc26266
+  apiKeyPathName: DeepSeekALiYun
   modelName: deepseek-r1
   apiUrl: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
   convertRspData: 0
