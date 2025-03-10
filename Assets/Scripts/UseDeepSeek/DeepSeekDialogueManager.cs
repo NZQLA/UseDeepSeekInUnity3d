@@ -9,10 +9,27 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 /// <summary>
-/// Deepseek对话管理器
+/// Deep Seek 对话管理器
 /// </summary>
 public class DeepSeekDialogueManager : MonoBehaviour
 {
+    /// <summary>
+    /// 当收到的回复有更新时
+    /// </summary>
+    public event Action<string> OnRspRefreshedHandler;
+
+    /// <summary>
+    /// 当回复完成时
+    /// </summary>
+    public event Action OnRspCompletedHandler;
+
+    ///// <summary>
+    ///// 当接收到 以 stream 方式 收到的数据时
+    ///// </summary>
+    //public event Action<DeepSeekRspStreamData> OnReceiveStreamDataHandler;
+
+
+
     [SerializeField, Header("聊天面板")]
     protected DeepSeekChatPanelTemp panelChat;
 
@@ -26,15 +43,6 @@ public class DeepSeekDialogueManager : MonoBehaviour
     [SerializeField, Header("用于接收回复的内存")]
     protected long bufferSize = 1024 * 20;
 
-    /// <summary>
-    /// 当收到的回复有更新时
-    /// </summary>
-    public event Action<string> OnRspRefreshedHandler;
-
-    /// <summary>
-    /// 当回复完成时
-    /// </summary>
-    public event Action OnRspCompletedHandler;
 
     // API配置
     [Header("API Settings")]
@@ -63,9 +71,12 @@ public class DeepSeekDialogueManager : MonoBehaviour
     [SerializeField, Header("返回的内容")]
     protected DeepSeekRspData rspData = new DeepSeekRspData { };
 
+    //[SerializeField, Header("接收到的流式数据")]
+    //protected List<DeepSeekRspStreamData> rspStreamData = new List<DeepSeekRspStreamData>();
+
     [SerializeField]
     protected byte[] rspBuffer = new byte[1024 * 20];
-
+    private UnityWebRequest requestByStream;
     [SerializeField]
     protected StreamedDownloadHandler streamedDownloadHandler;
 
@@ -80,7 +91,7 @@ public class DeepSeekDialogueManager : MonoBehaviour
     [Range(1, 1000)]
     public int maxTokens = 150;// 生成的最大令牌数（控制回复长度）
     // 角色设定
-    [System.Serializable]
+    [Serializable]
     public class NPCCharacter
     {
         public string name;
@@ -89,6 +100,8 @@ public class DeepSeekDialogueManager : MonoBehaviour
     }
     [SerializeField]
     public NPCCharacter npcCharacter;
+    private Coroutine corChatByStream;
+
     // 回调委托，用于异步处理API响应
     public delegate void DialogueCallback(string response, bool isSuccess);
 
@@ -97,17 +110,9 @@ public class DeepSeekDialogueManager : MonoBehaviour
     public void Start()
     {
         panelChat.OnSendQuestionHandler += SendQuestion;
+        panelChat.OnStopHandler += StopReceiveStreamData;
     }
 
-    public void Update()
-    {
-        //if (convertRspData)
-        //{
-        //    RefreshRspData();
-        //}
-
-
-    }
 
     /// <summary>
     /// 发送问题
@@ -156,31 +161,50 @@ public class DeepSeekDialogueManager : MonoBehaviour
     public void RefreshStreamRspData()
     {
         rspRawContent = Encoding.UTF8.GetString(rspBuffer);
+        //Log.LogAtUnityEditor($"Receive stream data: \n{rspRawContent}");
         // 只要第一行  
         var indexStart = rspRawContent.IndexOf(":") + 1;
         var indexEnd = rspRawContent.IndexOf("\n");
         var length = indexEnd - indexStart;
         rspRawContent = rspRawContent.Substring(indexStart, length);
 
+        //var dataStream = new DeepSeekRspStreamData();
+
         //rspRawContent = $"{{{rspRawContent}}}";
         //rspJsonObj = JsonUtility.FromJson(rspContent, typeof(object));
-        //Log.LogAtUnityEditor($"Receive stream data: {rspRawContent}");
+        Log.LogAtUnityEditor($"Receive stream data: \n{rspRawContent}");
         try
         {
             rspJsonObj = JsonMapper.ToObject(rspRawContent);
             var dataFirst = rspJsonObj["choices"][0]["delta"];
             var reasoning_content = dataFirst["reasoning_content"];
             var content = dataFirst["content"];
+            //// 获取时间戳
+            //dataStream.time = long.Parse(rspJsonObj["created"].ToString());
 
             if (reasoning_content != null)
             {
+                //dataStream.reasoning_content = reasoning_content.ToString();
                 rspData.AppendReason(reasoning_content.ToString());
             }
 
             if (content != null)
             {
+                //dataStream.content = content.ToString();
                 rspData.AppendContent(content.ToString());
             }
+
+
+
+            //rspStreamData.Add(dataStream);
+
+            //// 对 stream 数据进行排序 ， 排序规则是其时间戳
+            //rspStreamData.Sort();
+
+            //// 拼接排好序的 stream 数据
+            //rspData.reasoning_content = StringHelper.Join(rspStreamData, (sd) => sd.reasoning_content);
+            //rspData.content = StringHelper.Join(rspStreamData, (sd) => sd.content);
+
 
             rspContent = rspData.ToString();
             panelChat.SetRspContent(rspContent);
@@ -189,7 +213,7 @@ public class DeepSeekDialogueManager : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Log.LogAtUnityEditor($"{ex.Message} RawJson:{rspRawContent}", "red", BaseToolsForUnity.LogType.Error);
+            Log.LogAtUnityEditor($"{ex.Message}", "red", LogErrorType.Error);
         }
 
 
@@ -201,7 +225,7 @@ public class DeepSeekDialogueManager : MonoBehaviour
     /// </summary>
     /// <param name="data"></param>
     /// <param name="len"></param>
-    public void ReceiveData(byte[] data, int len)
+    public void OnReceiveStreamData(byte[] data, int len)
     {
         // 将数据存入 rspBuffer
         System.Buffer.BlockCopy(data, 0, rspBuffer, 0, len);
@@ -283,7 +307,7 @@ public class DeepSeekDialogueManager : MonoBehaviour
     /// <param name="callback">回调函数，用于处理API响应</param>  
     public void SendDialogueRequestWithStream(string userMessage, DialogueCallback callback)
     {
-        StartCoroutine(ProcessDialogueRequestWithStream(userMessage, callback));
+        corChatByStream = StartCoroutine(ProcessDialogueRequestWithStream(userMessage, callback));
     }
 
 
@@ -359,17 +383,18 @@ public class DeepSeekDialogueManager : MonoBehaviour
         };
         string jsonBody = JsonUtility.ToJson(requestBody);
         Debug.Log("Sending JSON: " + jsonBody); // 调试用，打印发送的JSON数据
-        UnityWebRequest request = CreateWebRequest(jsonBody);
+        requestByStream = CreateWebRequest(jsonBody);
 
 
         //rspBuffer = new byte[1024 * 4];
         //rspBuffer = new byte[1024 * 20];
         streamedDownloadHandler = new StreamedDownloadHandler(rspBuffer);
-        streamedDownloadHandler.OnReceiveDataHandler += ReceiveData;
-        request.downloadHandler = streamedDownloadHandler;
+        streamedDownloadHandler.OnReceiveDataHandler += OnReceiveStreamData;
+        requestByStream.downloadHandler = streamedDownloadHandler;
+
 
         convertRspData = true;
-        yield return request.SendWebRequest();
+        yield return requestByStream.SendWebRequest();
 
         //request.SendWebRequest();
         //yield break;
@@ -379,9 +404,9 @@ public class DeepSeekDialogueManager : MonoBehaviour
         convertRspData = false;
 
 
-        if (IsRequestError(request))
+        if (IsRequestError(requestByStream))
         {
-            Debug.LogError($"API Error: {request.responseCode} --- {request.error}    \n{request.downloadHandler.text}");
+            Debug.LogError($"API Error: {requestByStream.responseCode} --- {requestByStream.error}    \n{requestByStream.downloadHandler.text}");
             callback?.Invoke(null, false);
             yield break;
         }
@@ -409,8 +434,28 @@ public class DeepSeekDialogueManager : MonoBehaviour
         //}
     }
 
+    /// <summary>
+    /// 停止接收流式数据
+    /// </summary>
+    public void StopReceiveStreamData()
+    {
+        if (streamedDownloadHandler != null)
+        {
+            streamedDownloadHandler.StopReceive();
+        }
 
 
+        if (requestByStream != null)
+        {
+            requestByStream.Abort();
+        }
+
+        if (corChatByStream != null)
+        {
+            StopCoroutine(corChatByStream);
+            corChatByStream = null;
+        }
+    }
 
 
 
@@ -529,6 +574,16 @@ public class DeepSeekDialogueManager : MonoBehaviour
         {
             Debug.Log($"Content length: {contentLength}");
         }
+
+
+        /// <summary>
+        /// 停止接收数据
+        /// </summary>
+        public void StopReceive()
+        {
+            OnReceiveDataHandler = null;
+            OnCompleteHandler = null;
+        }
     }
 
 
@@ -551,6 +606,23 @@ public class DeepSeekDialogueManager : MonoBehaviour
             content += _content;
         }
 
+        public void Append(DeepSeekRspStreamData data)
+        {
+            if (data == null)
+            {
+                return;
+            }
+
+            if (data.reasoning_content != null)
+            {
+                reasoning_content += data.reasoning_content;
+            }
+
+            if (data.content != null)
+            {
+                content += data.content;
+            }
+        }
 
         public void Clear()
         {
@@ -563,5 +635,32 @@ public class DeepSeekDialogueManager : MonoBehaviour
             return $"<color=#CCCCCC><b>deepSeek思路</b>\n<i>{reasoning_content}</i></color>\n <b>正式回复:</b>\n{content}";
         }
     }
+
+
+    /// <summary>
+    /// deep seek 返回的流式数据
+    /// </summary>
+    [Serializable]
+    public class DeepSeekRspStreamData : IComparable<DeepSeekRspStreamData>
+    {
+        public string reasoning_content = "";
+        public string content = "";
+        /// <summary>
+        /// 时间戳
+        /// </summary>
+        public long time;
+
+        public int CompareTo(DeepSeekRspStreamData other)
+        {
+            if (other == null)
+            {
+                return 1;
+            }
+            return time.CompareTo(other.time);
+        }
+    }
+
+
+
 
 }
