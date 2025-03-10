@@ -296,7 +296,7 @@ MonoBehaviour:
   useStream: 1
   clearRspOnSendQuestion: 1
   bufferSize: 20480
-  apiKey: sk-b2f215c94283487ebf9436884bc26237
+  apiKey: sk-b2f215c94283487ebf9436884bc26266
   modelName: deepseek-r1
   apiUrl: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
   convertRspData: 0

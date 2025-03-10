@@ -161,7 +161,7 @@ namespace Business
         public void ScrollToBottom()
         {
             //rspScroll.ScrollToBottom();
-            rspScroll.verticalNormalizedPosition = 1;
+            rspScroll.verticalNormalizedPosition = 0;
         }
 
         public void ReadyForNextChat()
@@ -169,9 +169,13 @@ namespace Business
             chatState = ChatState.Free;
             ClearInput();
             RefreshBtnState();
-            //rspScroll.ScrollToTop();
+            ScrollToTop();
         }
 
+        public void ScrollToTop()
+        {
+            rspScroll.verticalNormalizedPosition = 1;
+        }
 
     }
 
