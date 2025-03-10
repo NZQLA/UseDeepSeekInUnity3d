@@ -21,6 +21,10 @@ And use stream to request deepseek instead of waiting for long time !
 ## UseAge 
 ### 1. Set you API Key in the panel
 ![Set The API Key](SetTheAPIKey.png)
+
+You can also save it in the  Environment Variable, but this <font color=red>need restart your compute !!!</font>
+On the project run, int the `DeepSeekDialogueManager.Start()` will get it auto.
+![Save Api Key In Env](SaveApiKeyInEnv.png)
 ### 2. Set the apiurl or model name
 I used the [aliyun](https://bailian.console.aliyun.com/?spm=a2c4g.11186623.0.0.13c7657bRaapwv#/model-market/detail/deepseek-r1) deepseek api, so the url and model name in the panel is for aliyun.
 If you use other api, you can set the apiurl and model name in the panel.
