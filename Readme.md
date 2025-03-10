@@ -27,4 +27,4 @@ If you use other api, you can set the apiurl and model name in the panel.
 
 
 ## Request with stream
-<video controls src="RequestDeepSeekWithStream.mp4"/>
+![Request Deep Seek By Stream](RequestDeepSeekByStream.gif)
