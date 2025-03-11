@@ -11,12 +11,22 @@ This project is produce at [Unity 接入 DeepSeek 实现 AI 对话功能](https:
 And use stream to request deepseek instead of waiting for long time !
 ## Unity 2020.3.9f1c1 
 
-## API([aliyun](https://bailian.console.aliyun.com/?spm=a2c4g.11186623.0.0.13c7657bRaapwv#/model-market/detail/deepseek-r1))
-- url: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
+## API Setting
+- API Url
 - modelName: deepseek-r1
-> [!INFO] Aliyun gave all user 1000,000 tokens for free ! \
-> [基于百炼调用 DeepSeek-R1 满血版 API，享100万免费token](https://www.aliyun.com/solution/tech-solution/deepseek-r1-for-platforms)
-> ![Remain Tokens](RemainTokens.png)
+- API Key
+- ### Aliyun gave all user 1000,000 tokens for free !
+    - API Url:`https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`
+    - Model Name:`deepseek-r1` \
+[基于百炼调用 DeepSeek-R1 满血版 API，享100万免费token](https://www.aliyun.com/solution/tech-solution/deepseek-r1-for-platforms)
+![Remain Tokens](RemainTokens.png)
+- ### [siliconflow](https://siliconflow.cn/zh-cn/models) even has free models...
+    |model web page|API Url|modelName|
+    |---|---|---|
+    |[deepseek-ai/DeepSeek-R1-Distill-Qwen-7B](https://cloud.siliconflow.cn/open/models?target=deepseek-ai/DeepSeek-R1-Distill-Qwen-7B)|`https://api.siliconflow.cn/v1/chat/completions`|`Qwen/QwQ-32B`|
+    |[deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B](https://cloud.siliconflow.cn/open/models?target=deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B)|`https://api.siliconflow.cn/v1/chat/completions`|`Qwen/QwQ-32B`|
+
+
 
 ## UseAge 
 ### 1. Set you API Key in the panel
