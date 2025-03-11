@@ -5,6 +5,7 @@ using System.Text;
 using BaseToolsForUnity;
 using Business;
 using LitJson;
+using MD;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -33,6 +34,9 @@ public class DeepSeekDialogueManager : MonoBehaviour
 
     [SerializeField, Header("聊天面板")]
     protected DeepSeekChatPanelTemp panelChat;
+
+    [SerializeField, Header("菜单面板")]
+    protected DeepSeekChatMenuPanel menuPanel;
 
     [SerializeField, Header("使用流式获取回复？")]
     protected bool useStream = true;
@@ -95,6 +99,11 @@ public class DeepSeekDialogueManager : MonoBehaviour
     public float temperature = 0.7f; // 控制生成文本的随机性（0-2，值越高越随机）   
     [Range(1, 1000)]
     public int maxTokens = 150;// 生成的最大令牌数（控制回复长度）
+
+
+    [SerializeField, Header("样式")]
+    protected MdTmpStyle style = new MdTmpStyle();
+
     // 角色设定
     [Serializable]
     public class NPCCharacter
@@ -116,6 +125,19 @@ public class DeepSeekDialogueManager : MonoBehaviour
     {
         panelChat.OnSendQuestionHandler += SendQuestion;
         panelChat.OnStopHandler += StopReceiveStreamData;
+
+        menuPanel.OnShowModeChangedHandler += (showLikeMd) =>
+        {
+            if (showLikeMd)
+            {
+                ShowRspLikeMarkDown();
+            }
+            else
+            {
+                ShowRspRaw();
+            }
+        };
+
         RefreshAPIKeyFromEnv();
     }
 
@@ -253,8 +275,12 @@ public class DeepSeekDialogueManager : MonoBehaviour
             //rspData.content = StringHelper.Join(rspStreamData, (sd) => sd.content);
 
 
-            rspContent = rspData.ToString();
-            panelChat.SetRspContent(rspContent);
+            //rspContent = rspData.ToString();
+
+            // 将 markdown 转换为 tmp 格式 再显示
+            ShowRspLikeMarkDown();
+
+            //panelChat.SetRspContent(rspContent);
             panelChat.ScrollToBottom();
             OnRspRefreshedHandler?.Invoke(rspRawContent);
         }
@@ -265,6 +291,27 @@ public class DeepSeekDialogueManager : MonoBehaviour
 
 
 
+    }
+
+    /// <summary>
+    /// 将 markdown 转换为 tmp 格式 再显示
+    /// </summary>
+    [ContextMenu("ShowRspLikeMarkDown")]
+    public void ShowRspLikeMarkDown()
+    {
+        rspContent = rspData.ToString();
+        rspContent = rspContent.ConvertMarkdownToTMP(style);
+        panelChat.SetRspContent(rspContent);
+    }
+
+    /// <summary>
+    /// 显示原始的回复数据
+    /// </summary>
+    [ContextMenu("ShowRspRaw")]
+    public void ShowRspRaw()
+    {
+        rspContent = rspData.ToString();
+        panelChat.SetRspContent(rspContent);
     }
 
     /// <summary>
@@ -300,7 +347,9 @@ public class DeepSeekDialogueManager : MonoBehaviour
             {
                 Log.LogAtUnityEditor($"{gameObject.name}.{this.GetType()} 请求失败!!!  ", "#FF0000");
             }
-            panelChat.SetRspContent(response);
+            rspContent = response;
+            ShowRspLikeMarkDown();
+            //panelChat.SetRspContent(response);
             OnRspCompleted();
         });
 
@@ -484,6 +533,7 @@ public class DeepSeekDialogueManager : MonoBehaviour
     /// <summary>
     /// 停止接收流式数据
     /// </summary>
+    [ContextMenu("StopReceiveStreamData")]
     public void StopReceiveStreamData()
     {
         if (streamedDownloadHandler != null)
