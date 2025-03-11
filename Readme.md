@@ -13,7 +13,7 @@ And use stream to request deepseek instead of waiting for long time !
 
 ## API Setting
 - API Url
-- modelName: deepseek-r1
+- ModelName
 - API Key
 - ### Aliyun gave all user 1000,000 tokens for free !
     - API Url:`https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions`
@@ -21,11 +21,12 @@ And use stream to request deepseek instead of waiting for long time !
 [基于百炼调用 DeepSeek-R1 满血版 API，享100万免费token](https://www.aliyun.com/solution/tech-solution/deepseek-r1-for-platforms)
 ![Remain Tokens](RemainTokens.png)
 - ### [siliconflow](https://siliconflow.cn/zh-cn/models) even has free models...
-    |model web page|API Url|modelName|
+    |Model web page|API Url|modelName|
     |---|---|---|
     |[deepseek-ai/DeepSeek-R1-Distill-Qwen-7B](https://cloud.siliconflow.cn/open/models?target=deepseek-ai/DeepSeek-R1-Distill-Qwen-7B)|`https://api.siliconflow.cn/v1/chat/completions`|`Qwen/QwQ-32B`|
     |[deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B](https://cloud.siliconflow.cn/open/models?target=deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B)|`https://api.siliconflow.cn/v1/chat/completions`|`Qwen/QwQ-32B`|
 
+**No matter use aliyun or siliconflow , will parse the rsp data in the same way , and works ok !**
 
 
 ## UseAge 
