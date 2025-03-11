@@ -177,7 +177,7 @@ public class DeepSeekDialogueManager : MonoBehaviour
     {
         rspRawContent = Encoding.UTF8.GetString(rspBuffer);
         //Log.LogAtUnityEditor($"Receive stream data: \n{rspRawContent}");
-        // 只要第一行  
+        // 只要第一个":" 后面的部分 
         var indexStart = rspRawContent.IndexOf(":") + 1;
         // 如果没有找到冒号，说明这不是一个有效的数据
         if (indexStart < 0)
@@ -191,12 +191,16 @@ public class DeepSeekDialogueManager : MonoBehaviour
             return;
         }
 
+        // 只要第一行的数据
         var indexEnd = rspRawContent.IndexOf("\n");
+
+        // 有效数据的长度为0 说明这不是一个有效的数据
         var length = indexEnd - indexStart;
         if (length <= 0)
         {
             return;
         }
+        // 截取有效的json数据部分
         rspRawContent = rspRawContent.Substring(indexStart, length);
 
         //var dataStream = new DeepSeekRspStreamData();
@@ -206,7 +210,9 @@ public class DeepSeekDialogueManager : MonoBehaviour
         Log.LogAtUnityEditor($"Receive stream data: \n{rspRawContent}");
         try
         {
+            // 解析json数据
             rspJsonObj = JsonMapper.ToObject(rspRawContent);
+            // 只要第一条数据
             var rspChoices0 = rspJsonObj[deepSeekInfo.rspChoices][0];
             //  {"choices":[{"finish_reason":"stop","delta" ... } means the rsp will be over soon!
             if (rspChoices0[deepSeekInfo.rspFinishFlag] != null &&

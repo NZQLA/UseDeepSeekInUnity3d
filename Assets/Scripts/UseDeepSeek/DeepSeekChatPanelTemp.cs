@@ -1,4 +1,6 @@
 using System;
+using System.Security.Cryptography;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +25,7 @@ namespace Business
         protected ScrollRect rspScroll;
 
         [SerializeField, Header("回复内容")]
-        protected Text rsp;
+        protected TextMeshProUGUI rsp;
 
         [SerializeField, Header("输入框")]
         protected InputField inputQuestion;
@@ -49,7 +51,6 @@ namespace Business
 
             //监听输入框的回车事件
             inputQuestion.onEndEdit.AddListener(TrySendQuestion);
-
 
 
             btnSendOrStop.onClick.AddListener(onBtnSendOrStop);
