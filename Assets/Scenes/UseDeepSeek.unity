@@ -306,8 +306,9 @@ MonoBehaviour:
   bufferSize: 20480
   apiKey: b2f215c94283487ebf9436884bc26266
   apiKeyPathName: DeepSeekALiYun
-  modelName: deepseek-r1
-  apiUrl: https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions
+  nameAPIKey: DeepSeekAPIKey
+  modelName: Qwen/QwQ-32B
+  apiUrl: https://api.siliconflow.cn/v1/chat/completions
   convertRspData: 0
   rspRawContent: 
   rspContent: 
@@ -324,11 +325,12 @@ MonoBehaviour:
       colorCode: 
     styleCode:
       colorCode: '#CCCCCC'
-      format: <color={0}>{1}</color>
     styleLink:
       color: '#00aacc'
       underline: 1
       format: <link="{0}"><color={1}>{2}</color></link>
+    styleHighLight:
+      color: '#AAAA0022'
   npcCharacter:
     name: UnityChan
     personalityPrompt: "\u4F60\u662F\u865A\u62DF\u4EBA\u7269Unity-Chan\uFF0C\u662F\u4E2A\u6027\u683C\u6D3B\u6CFC\uFF0C\u806A\u660E\u53EF\u7231\u7684\u5973\u751F\u3002\u64C5\u957FUnity\u548CC#\u7F16\u7A0B\u77E5\u8BC6\u3002"
@@ -1797,7 +1799,7 @@ GameObject:
   m_Layer: 6
   m_Name: Content
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1854,7 +1856,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: "\U0001F602\U0001F600\U0001F923\U0001F60D\U0001F60E\U0001F60B\U0001F60A\n<mark=#FFFF0066>highlighted</mark>\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8150237748e68674981f9789e22cfed8, type: 2}
   m_sharedMaterial: {fileID: 21171085570992950, guid: 8150237748e68674981f9789e22cfed8, type: 2}
@@ -2170,6 +2172,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1930148873}
   m_CullTransparentMesh: 1
+--- !u!1 &1976507017
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1976507018}
+  - component: {fileID: 1976507019}
+  m_Layer: 0
+  m_Name: TempAPIDataHelper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1976507018
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976507017}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 640.124, y: 490.69998, z: -201.72737}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1976507019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976507017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dbe820ba5defc14a9494cc0b01ec6cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameKey: DeepSeekAPIKey
+  KeyValue: 
 --- !u!1 &2057904140
 GameObject:
   m_ObjectHideFlags: 0

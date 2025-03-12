@@ -55,8 +55,11 @@ public class DeepSeekDialogueManager : MonoBehaviour
     //private string apiKey = "在此处填入你申请的API密钥";  // DeepSeek API密钥
     private string apiKey = "sk-38bd3a635ad2459e85601376800f3a69";  // DeepSeek API密钥
 
-    [SerializeField, Header("环境变量路径：阿里云的 Deep Seek APIKey")]
-    private string apiKeyPathName = "DeepSeekALiYun";
+    //[SerializeField, Header("环境变量路径：阿里云的 Deep Seek APIKey")]
+    //private string apiKeyPathName = "DeepSeekALiYun";
+
+
+    public string nameAPIKey = "DeepSeekAPIKey";
 
 
     [SerializeField]
@@ -138,18 +141,28 @@ public class DeepSeekDialogueManager : MonoBehaviour
             }
         };
 
-        RefreshAPIKeyFromEnv();
+        //RefreshAPIKeyFromEnv();
+        RefreshAPIKeyFromPlayerPrefs();
     }
 
 
-    /// <summary>
-    /// Use the API key from environment variable to refresh the API key. 
-    /// </summary>
-    [ContextMenu("RefreshAPIKeyFromEnv")]
-    public void RefreshAPIKeyFromEnv()
+    ///// <summary>
+    ///// Use the API key from environment variable to refresh the API key. 
+    ///// </summary>
+    //[ContextMenu("RefreshAPIKeyFromEnv")]
+    //public void RefreshAPIKeyFromEnv()
+    //{
+    //    apiKey = Environment.GetEnvironmentVariable(apiKeyPathName);
+    //}
+
+
+    [ContextMenu("RefreshAPIKeyFromPlayerPrefs")]
+    public void RefreshAPIKeyFromPlayerPrefs()
     {
-        apiKey = Environment.GetEnvironmentVariable(apiKeyPathName);
+        apiKey = PlayerPrefs.GetString(nameAPIKey);
     }
+
+
 
     /// <summary>
     /// 发送问题
