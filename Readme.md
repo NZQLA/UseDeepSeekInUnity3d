@@ -9,6 +9,38 @@ This is for You.
 This project is produce at [Unity 接入 DeepSeek 实现 AI 对话功能](https://mp.weixin.qq.com/s/gsKhgVp25f6h4pYcMImexA)
 
 And use stream to request deepseek instead of waiting for long time !
+
+## Features
+### Show like markdown
+- Title
+```markdown 
+# Title1 
+## Title2
+### Title3
+#### Title4
+##### Title5
+###### Title6
+```
+# Title1 
+## Title2
+### Title3
+#### Title4
+##### Title5
+###### Title6
+- **Bold**
+- *Italic*
+- ==Highlight==
+- ~~Delete~~
+- `inline code`
+- multi line code
+```csharp
+  // code 
+  int a = 1;
+  int b = 2;
+  int c = a + b;
+```
+
+
 ## Unity 2020.3.9f1c1 
 
 ## API Setting
