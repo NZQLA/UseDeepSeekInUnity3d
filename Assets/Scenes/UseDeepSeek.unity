@@ -306,10 +306,10 @@ MonoBehaviour:
   bufferSize: 20480
   apiKey: b2f215c94283487ebf9436884bc26266
   nameAPIKey: DeepSeekAPIKey
-  modelName: Qwen/QwQ-32B
+  modelName: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
   apiUrl: https://api.siliconflow.cn/v1/chat/completions
   convertRspData: 0
-  rspRawStreamContent: 
+  rspRawStreamContent: '[DONE]'
   rspContent: "<color=#CCCCCC><b>deepSeek\u601D\u8DEF</b>\n<i>AAAAAAAA</i></color>\n
     <b>\u6B63\u5F0F\u56DE\u590D:</b>\n<b>\u52A0\u7C97</b> <i>\u503E\u659C</i> <mark=#AAAA0022>highlight</mark>
     <s>delete</s>  <mark=#66666622><color=#f48617>inline code</color></mark> <br><mark=#AAAAAA22><color=#4ec9b0>//

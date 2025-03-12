@@ -55,8 +55,8 @@ And use stream to request deepseek instead of waiting for long time !
 - ### [siliconflow](https://siliconflow.cn/zh-cn/models) even has free models...
     |Model web page|API Url|modelName|
     |---|---|---|
-    |[deepseek-ai/DeepSeek-R1-Distill-Qwen-7B](https://cloud.siliconflow.cn/open/models?target=deepseek-ai/DeepSeek-R1-Distill-Qwen-7B)|`https://api.siliconflow.cn/v1/chat/completions`|`Qwen/QwQ-32B`|
-    |[deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B](https://cloud.siliconflow.cn/open/models?target=deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B)|`https://api.siliconflow.cn/v1/chat/completions`|`Qwen/QwQ-32B`|
+    |[deepseek-ai/DeepSeek-R1-Distill-Qwen-7B](https://cloud.siliconflow.cn/open/models?target=deepseek-ai/DeepSeek-R1-Distill-Qwen-7B)|`https://api.siliconflow.cn/v1/chat/completions`|`deepseek-ai/DeepSeek-R1-Distill-Qwen-7B`|
+    |[deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B](https://cloud.siliconflow.cn/open/models?target=deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B)|`https://api.siliconflow.cn/v1/chat/completions`|`deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B`|
 
 **No matter use aliyun or siliconflow , will parse the rsp data in the same way , and works ok !**
 
