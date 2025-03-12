@@ -26,6 +26,7 @@ namespace MD
         private static readonly Regex linkRegex = new Regex(@"\[(.*?)\]\((.*?)\)", RegexOptions.Compiled);
         private static readonly Regex listRegex = new Regex(@"(^|\n)(\s*)([-+*])\s+(.*?)(?=\n|$)", RegexOptions.Compiled);
         private static readonly Regex strikethroughRegex = new Regex(@"~~(.*?)~~", RegexOptions.Compiled);
+        private static readonly Regex highlightRegex = new Regex(@"==(.*?)==", RegexOptions.Compiled);
 
         // 添加一个正则表达式来检测同时包含标题和列表的行
         private static readonly Regex titleAndListRegex = new Regex(@"(^|\n)(\s*)(#+)\s+(.*?)([-+*])\s+(.*?)(?=\n|$)", RegexOptions.Compiled);
@@ -85,9 +86,15 @@ namespace MD
             });
 
             // 处理内联格式
+            // 处理高亮
+            workingText = highlightRegex.Replace(workingText, $"<mark={style.styleHighLight.color}>$1</mark>");
+            // 加粗
             workingText = boldRegex.Replace(workingText, "<b>$1</b>");
+            // 倾斜
             workingText = italicRegex.Replace(workingText, "<i>$1</i>");
+            // 处理删除线
             workingText = strikethroughRegex.Replace(workingText, "<s>$1</s>");
+
             workingText = linkRegex.Replace(workingText, match =>
             {
                 string text = match.Groups[1].Value;
@@ -134,6 +141,7 @@ namespace MD
         public MdTmpStyleTitle styleTitle = new MdTmpStyleTitle();
         public MdTmpStyleCode styleCode = new MdTmpStyleCode();
         public MdTmpStyleLink styleLink = new MdTmpStyleLink();
+        public MdTmpStyleHighLight styleHighLight = new MdTmpStyleHighLight();
     }
 
 
@@ -208,7 +216,7 @@ namespace MD
     public class MdTmpStyleCode
     {
         public string colorCode = "#CCCCCC";
-        public string format = "<color={0}>{1}</color>";
+        //public string format = "<color={0}>{1}</color>";
     }
 
 
@@ -221,6 +229,13 @@ namespace MD
         public string color = "#00aacc";
         public bool underline = true;
         public string format = "<link=\"{0}\"><color={1}>{2}</color></link>";
+    }
+
+
+    [Serializable]
+    public class MdTmpStyleHighLight
+    {
+        public string color = "#AAAA0022";
     }
 
 
