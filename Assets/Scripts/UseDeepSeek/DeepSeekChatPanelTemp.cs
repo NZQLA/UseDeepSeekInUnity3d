@@ -26,7 +26,8 @@ namespace Business
         protected ScrollRect rspScroll;
 
         [SerializeField, Header("回复内容")]
-        protected TextMeshProUGUI rsp;
+        //protected TextMeshProUGUI rsp;
+        protected TMP_InputField rsp;
 
         [SerializeField, Header("输入框")]
         protected InputField inputQuestion;
