@@ -31,6 +31,11 @@ namespace MD
         // 添加一个正则表达式来检测同时包含标题和列表的行
         private static readonly Regex titleAndListRegex = new Regex(@"(^|\n)(\s*)(#+)\s+(.*?)([-+*])\s+(.*?)(?=\n|$)", RegexOptions.Compiled);
 
+
+        // 添加正则表达式来检测行内代码和多行代码
+        private static readonly Regex inlineCodeRegex = new Regex(@"(?<!`)`([^`]*)`(?!`)", RegexOptions.Compiled);
+        private static readonly Regex multilineCodeRegex = new Regex(@"```([\s\S]*?)```", RegexOptions.Compiled);
+
         /// <summary>
         /// Convert markdown to TextMeshPro format.
         /// </summary>
@@ -41,6 +46,21 @@ namespace MD
         {
             // 先添加一个换行符，确保最后一行也能被正确处理，最后会去掉多余的<br>
             string workingText = markdown + "\n";
+
+            // 处理多行代码
+            workingText = multilineCodeRegex.Replace(workingText, match =>
+            {
+                string codeContent = match.Groups[1].Value;
+                return $"<mark={style.styleCode.colorLinesBg_}><color={style.styleCode.colorLines_}>{codeContent}</color></mark>";
+            });
+
+            // 处理行内代码
+            workingText = inlineCodeRegex.Replace(workingText, match =>
+            {
+                string codeContent = match.Groups[1].Value;
+                return $"<mark={style.styleCode.colorInLineBg_}><color={style.styleCode.colorInLine_}>{codeContent}</color></mark>";
+            });
+
 
             // 处理同时包含标题和列表的行（如果存在）
             workingText = titleAndListRegex.Replace(workingText, match =>
@@ -102,8 +122,11 @@ namespace MD
                 return $"<link=\"{url}\"><color={style.styleLink.color}>{text}</color></link>";
             });
 
-            // 替换换行符
-            workingText = workingText.Replace("\n", "<br>");
+
+
+
+            //// 替换换行符
+            //workingText = workingText.Replace("\n", "<br>");
 
             // 如果最后有添加的额外换行，去掉最后的<br>
             if (markdown.EndsWith("\n") == false && workingText.EndsWith("<br>"))
@@ -215,7 +238,10 @@ namespace MD
     [Serializable]
     public class MdTmpStyleCode
     {
-        public string colorCode = "#CCCCCC";
+        public string colorLinesBg_ = "#AAAAAA22";
+        public string colorLines_ = "#4ec9b0";
+        public string colorInLineBg_ = "#66666622";
+        public string colorInLine_ = "#f48617";
         //public string format = "<color={0}>{1}</color>";
     }
 
