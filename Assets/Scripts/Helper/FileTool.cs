@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using System.IO;
 using UnityEngine;
 
-namespace BaseToolsForUnity
+namespace Business
 {
 
     /// <summary>

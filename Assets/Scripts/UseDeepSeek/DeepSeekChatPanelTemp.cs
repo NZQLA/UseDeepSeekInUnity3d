@@ -17,6 +17,8 @@ namespace Business
         /// </summary>
         public event Action<string> OnSendQuestionHandler;
 
+        public event Action<Vector3> OnSelectContentEndHandler;
+
         public event Action OnStopHandler;
 
         [SerializeField, Header("聊天状态")]
@@ -48,12 +50,14 @@ namespace Business
 
         public void Awake()
         {
+            rsp.readOnly = true;
+
             // 监听输入框的输入事件
             inputQuestion.onValueChanged.AddListener(OnInputting);
 
             //监听输入框的回车事件
             inputQuestion.onEndEdit.AddListener(TrySendQuestion);
-
+            GUIUtility.systemCopyBuffer = "";
 
             btnSendOrStop.onClick.AddListener(onBtnSendOrStop);
 
@@ -61,12 +65,47 @@ namespace Business
             {
                 imgBtn = btnSendOrStop.targetGraphic as Image;
             }
+
+            // 监听文本选择结束事件
+            rsp.onEndTextSelection.AddListener((str, v1, v2) =>
+            {
+                if (rsp.selectionStringAnchorPosition != rsp.selectionStringFocusPosition)
+                {
+                    Vector3 buttonPosition = CalculateButtonPosition();
+                    OnSelectContentEndHandler?.Invoke(buttonPosition);
+                    //actionButton.transform.position = buttonPosition;
+                    //actionButton.gameObject.SetActive(true);
+                }
+                else
+                {
+                    //actionButton.gameObject.SetActive(false);
+                }
+
+            });
         }
 
         public void Start()
         {
             ReadyForNextChat();
         }
+
+
+
+        public Vector3 CalculateButtonPosition()
+        {
+            int startIndex = Mathf.Min(rsp.selectionStringAnchorPosition, rsp.selectionStringFocusPosition);
+            int endIndex = Mathf.Max(rsp.selectionStringAnchorPosition, rsp.selectionStringFocusPosition);
+
+            TMP_Text textComponent = rsp.textComponent;
+            Vector3 startPosition = textComponent.textInfo.characterInfo[startIndex].bottomLeft;
+            Vector3 endPosition = textComponent.textInfo.characterInfo[endIndex].topRight;
+
+            Vector3 buttonPosition = (startPosition + endPosition) / 2;
+            buttonPosition = textComponent.transform.TransformPoint(buttonPosition);
+
+            return buttonPosition;
+        }
+
 
         /// <summary>
         /// 当点击了 停止/发送 按钮

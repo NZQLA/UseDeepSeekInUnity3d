@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using UnityEngine;
 
 
-namespace BaseToolsForUnity
+namespace Business
 {
     /// <summary>
     /// Some  helper  methods   for string .

@@ -1,8 +1,7 @@
-using System.Collections;
 using UnityEngine;
 
 
-namespace Template
+namespace Business
 {
     /// <summary>
     /// 
