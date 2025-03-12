@@ -73,7 +73,7 @@ public class DeepSeekDialogueManager : MonoBehaviour
 
 
     [SerializeField]
-    protected string rspRawContent = ""; // 响应数据
+    protected string rspRawStreamContent = ""; // 响应数据
 
 
     [SerializeField]
@@ -178,8 +178,8 @@ public class DeepSeekDialogueManager : MonoBehaviour
 
         if (clearRspOnSendQuestion)
         {
-            rspRawContent = "";
-            panelChat.SetRspContent(rspRawContent);
+            rspRawStreamContent = "";
+            panelChat.SetRspContent(rspRawStreamContent);
         }
 
 
@@ -210,43 +210,54 @@ public class DeepSeekDialogueManager : MonoBehaviour
     /// </summary>
     public void RefreshStreamRspData()
     {
-        rspRawContent = Encoding.UTF8.GetString(rspBuffer);
-        //Log.LogAtUnityEditor($"Receive stream data: \n{rspRawContent}");
-        // 只要第一个":" 后面的部分 
-        var indexStart = rspRawContent.IndexOf(":") + 1;
-        // 如果没有找到冒号，说明这不是一个有效的数据
-        if (indexStart < 0)
+        rspRawStreamContent = Encoding.UTF8.GetString(rspBuffer);
+        bool flowControl = OnGetStreamContent(rspRawStreamContent);
+        if (!flowControl)
         {
             return;
+        }
+
+    }
+
+    public bool OnGetStreamContent(string rawStreamContent)
+    {
+        rspRawStreamContent = rawStreamContent;
+        //Log.LogAtUnityEditor($"Receive stream data: \n{rspRawContent}");
+        // 只要第一个":" 后面的部分 
+        var indexStart = rspRawStreamContent.IndexOf(":") + 1;
+        // 如果没有找到冒号，说明这不是一个有效的数据
+        if (indexStart <= 0)
+        {
+            return false;
         }
 
         // this msg is tell you the stream is done
-        if (rspRawContent.StartsWith(deepSeekInfo.rspDone))
+        if (rspRawStreamContent.StartsWith(deepSeekInfo.rspDone))
         {
-            return;
+            return false;
         }
 
         // 只要第一行的数据
-        var indexEnd = rspRawContent.IndexOf("\n");
+        var indexEnd = rspRawStreamContent.IndexOf("\n");
 
         // 有效数据的长度为0 说明这不是一个有效的数据
         var length = indexEnd - indexStart;
         if (length <= 0)
         {
-            return;
+            return false;
         }
         // 截取有效的json数据部分
-        rspRawContent = rspRawContent.Substring(indexStart, length);
+        rspRawStreamContent = rspRawStreamContent.Substring(indexStart, length);
 
         //var dataStream = new DeepSeekRspStreamData();
 
         //rspRawContent = $"{{{rspRawContent}}}";
         //rspJsonObj = JsonUtility.FromJson(rspContent, typeof(object));
-        Log.LogAtUnityEditor($"Receive stream data: \n{rspRawContent}");
+        Log.LogAtUnityEditor($"Receive stream data: \n{rspRawStreamContent}");
         try
         {
             // 解析json数据
-            rspJsonObj = JsonMapper.ToObject(rspRawContent);
+            rspJsonObj = JsonMapper.ToObject(rspRawStreamContent);
             // 只要第一条数据
             var rspChoices0 = rspJsonObj[deepSeekInfo.rspChoices][0];
             //  {"choices":[{"finish_reason":"stop","delta" ... } means the rsp will be over soon!
@@ -254,7 +265,7 @@ public class DeepSeekDialogueManager : MonoBehaviour
                 rspChoices0[deepSeekInfo.rspFinishFlag].ToString() == deepSeekInfo.rspFinishFlagValue)
             {
                 //OnRspCompleted();
-                return;
+                return false;
             }
 
 
@@ -295,15 +306,14 @@ public class DeepSeekDialogueManager : MonoBehaviour
 
             //panelChat.SetRspContent(rspContent);
             panelChat.ScrollToBottom();
-            OnRspRefreshedHandler?.Invoke(rspRawContent);
+            OnRspRefreshedHandler?.Invoke(rspRawStreamContent);
         }
         catch (Exception ex)
         {
-            Log.LogAtUnityEditor($"{ex.Message}", "red", LogErrorType.Error);
+            Log.LogAtUnityEditor($"{ex.Message}  rawStreamContent:{rawStreamContent}", "red", LogErrorType.Error);
         }
 
-
-
+        return true;
     }
 
     /// <summary>
@@ -521,7 +531,7 @@ public class DeepSeekDialogueManager : MonoBehaviour
         }
 
         RefreshStreamRspData();
-        if (rspRawContent.IsNullOrEmpty())
+        if (rspRawStreamContent.IsNullOrEmpty())
         {
             callback?.Invoke(name + "（陷入沉默）", false);
         }
