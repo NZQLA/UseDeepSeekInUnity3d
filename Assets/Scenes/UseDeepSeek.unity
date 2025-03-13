@@ -500,10 +500,10 @@ MonoBehaviour:
   apiUrl: https://api.siliconflow.cn/v1/chat/completions
   convertRspData: 0
   rspRawStreamContent: '[DONE]'
-  rspContent: "<color=#CCCCCC><b>deepSeek\u601D\u8DEF</b>\n<i>AAAAAAAA</i></color>\n
-    <b>\u6B63\u5F0F\u56DE\u590D:</b>\n<b>\u52A0\u7C97</b> <i>\u503E\u659C</i> <mark=#AAAA0022>highlight</mark>
-    <s>delete</s>  <mark=#66666622><color=#f48617>inline code</color></mark> <br><mark=#AAAAAA22><color=#4ec9b0>//
-    multi lines code <br>public int a = 0; <br> public string s = \"\";<br></color></mark>\n"
+  rspContent: "<color=#CCCCCC><b>deepSeek\u601D\u8DEF</b>\n<i>AAAAAAAA</i></color>\n<b>\u6B63\u5F0F\u56DE\u590D:</b>\n<b>\u52A0\u7C97</b>
+    <i>\u503E\u659C</i> <mark=#AAAA0022>highlight</mark> <s>delete</s>  <mark=#66666622><color=#f48617>inline
+    code</color></mark> <br><mark=#AAAAAA22><color=#4ec9b0>// multi lines code <br>public
+    int a = 0; <br> public string s = \"\";<br></color></mark>\n"
   rspData:
     reasoning_content: AAAAAAAA
     content: "**\u52A0\u7C97** *\u503E\u659C* ==highlight== ~~delete~~  `inline code`
@@ -2342,9 +2342,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<color=#CCCCCC><b>deepSeek\u601D\u8DEF</b>\n<i>AAAAAAAA</i></color>\n
-    <b>\u6B63\u5F0F\u56DE\u590D:</b>\n<b>\u52A0\u7C97</b> <i>\u503E\u659C</i> <mark=#AAAA0022>highlight</mark>
-    <s>delete</s>  <mark=#66666622><color=#f48617>inline code</color></mark> <br>-----------------------------------------------------------------------------------------------------------------------------------------------------------<mark=#AAAAAA22><color=#4ec9b0>//
+  m_text: "<color=#CCCCCC><b>deepSeek\u601D\u8DEF</b>\n<i>AAAAAAAA</i></color>\n<b>\u6B63\u5F0F\u56DE\u590D:</b>\n<b>\u52A0\u7C97</b>
+    <i>\u503E\u659C</i> <mark=#AAAA0022>highlight</mark> <s>delete</s>  <mark=#66666622><color=#f48617>inline
+    code</color></mark> <br>-----------------------------------------------------------------------------------------------------------------------------------------------------------<mark=#AAAAAA22><color=#4ec9b0>//
     multi lines code <br>public int a = 0; <br> public string s = \"\";<br></color></mark>\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8150237748e68674981f9789e22cfed8, type: 2}
@@ -2952,6 +2952,7 @@ GameObject:
   - component: {fileID: 2119711826}
   - component: {fileID: 2119711825}
   - component: {fileID: 2119711827}
+  - component: {fileID: 2119711828}
   m_Layer: 5
   m_Name: ChatPanel
   m_TagString: Untagged
@@ -3020,3 +3021,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tgShowAsMd: {fileID: 465118735}
+--- !u!114 &2119711828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2119711823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e6b30ef4fa2504cbb51df35924480c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rspPanel: {fileID: 999741710}
+  scrollSpeed: 30
+  mouseScrollWheel: Mouse ScrollWheel
