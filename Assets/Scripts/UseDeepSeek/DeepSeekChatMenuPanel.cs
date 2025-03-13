@@ -18,6 +18,10 @@ namespace Business
 
         [SerializeField, Header("Show like markdown?")]
         protected Toggle tgShowAsMd;
+        /// <summary>
+        /// State: Show like markdown now ?
+        /// </summary>
+        public bool ShowAsMd => tgShowAsMd.isOn;
 
         public void Awake()
         {

@@ -303,7 +303,9 @@ namespace Business
                 //rspContent = rspData.ToString();
 
                 // 将 markdown 转换为 tmp 格式 再显示
-                ShowRspLikeMarkDown();
+                //ShowRspLikeMarkDown();
+
+                RefreshTheRspPanel();
 
                 //panelChat.SetRspContent(rspContent);
                 panelChat.ScrollToBottom();
@@ -315,6 +317,22 @@ namespace Business
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Refreshes the RSP panel based on the display mode. It shows the panel in Markdown format if 'ShowAsMd' is
+        /// true; otherwise, it shows raw format.
+        /// </summary>
+        public void RefreshTheRspPanel()
+        {
+            if (menuPanel.ShowAsMd)
+            {
+                ShowRspLikeMarkDown();
+            }
+            else
+            {
+                ShowRspRaw();
+            }
         }
 
         /// <summary>
