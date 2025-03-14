@@ -126,13 +126,13 @@ namespace MD
             //// 替换换行符
             //workingText = workingText.Replace("\n", "<br>");
 
-            // 如果最后有添加的额外换行，去掉最后的<br>
-            if (markdown.EndsWith("\n") == false && workingText.EndsWith("<br>"))
-            {
-                workingText = workingText.Substring(0, workingText.Length - 4);
-            }
+            //// 如果最后有添加的额外换行，去掉最后的<br>
+            //if (markdown.EndsWith("\n") == false && workingText.EndsWith("<br>"))
+            //{
+            //    workingText = workingText.Substring(0, workingText.Length - 4);
+            //}
 
-            return workingText;
+            return workingText.Trim();
         }
 
         /// <summary>
